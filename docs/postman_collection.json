@@ -1,0 +1,80 @@
+{
+  "info": {
+    "name": "ML Demand Forecasting Platform API",
+    "description": "Endpoints for the demand forecasting platform: upload datasets, train the model, get predictions, and check evaluation metrics.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/",
+        "description": "Confirms the API is running and reports whether a model is currently loaded."
+      }
+    },
+    {
+      "name": "Upload Dataset",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/upload",
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "file", "type": "file", "src": "" }
+          ]
+        },
+        "description": "Upload a CSV dataset. Must have columns: date, store, product, price, promo, units_sold."
+      }
+    },
+    {
+      "name": "Train Model",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/train?dataset_filename=cleaned_sales_dataset.csv",
+        "description": "Retrains XGBoost on the given dataset (must already be cleaned/feature-engineered) and returns evaluation metrics."
+      }
+    },
+    {
+      "name": "Predict",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/predict",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"store\": \"Store_1\",\n  \"product\": \"Product_A\",\n  \"date\": \"2025-08-01\",\n  \"promo\": 0\n}"
+        },
+        "description": "Predict units sold for a given store, product, and date. `price` is optional — defaults to the historical average for that store/product."
+      }
+    },
+    {
+      "name": "Predict (with promo)",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/predict",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"store\": \"Store_1\",\n  \"product\": \"Product_A\",\n  \"date\": \"2025-08-01\",\n  \"promo\": 1\n}"
+        },
+        "description": "Same as Predict, but with a promotion running — expect a higher predicted value."
+      }
+    },
+    {
+      "name": "Evaluate",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/evaluate",
+        "description": "Returns metrics from the most recent /train call, or falls back to the saved Day 6 notebook results."
+      }
+    }
+  ]
+}
