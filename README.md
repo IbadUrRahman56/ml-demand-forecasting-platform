@@ -259,13 +259,7 @@ See `docs/final_report.docx` for the full discussion.
 - CI/CD pipeline and full containerized deployment
 - Segment-specific models to close the per-store/product error gap
 
----
 
-## License
-
-This project was built as part of an internship assignment. See `LICENSE` for details, or treat as MIT-licensed unless otherwise specified by your organization.
-
----
 
 <div align="center">
 
