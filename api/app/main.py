@@ -1,7 +1,5 @@
 """
 FastAPI backend for the ML Demand Forecasting Platform.
-Day 7: full implementation — /upload, /train, /predict, /evaluate all wired
-to real trained models (no more stubs).
 """
 import os
 import joblib
@@ -62,6 +60,7 @@ _load_artifacts()
 # ---------------------------------------------------------------------------
 # Schemas
 # ---------------------------------------------------------------------------
+
 class PredictRequest(BaseModel):
     store: str = Field(..., example="Store_1")
     product: str = Field(..., example="Product_A")
