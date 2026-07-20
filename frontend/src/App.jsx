@@ -5,7 +5,7 @@ import {
   BarChart, Bar, Legend, PieChart, Pie, Cell, ComposedChart,
 } from 'recharts'
 
-const API_BASE = 'http://localhost:8000'
+const API_BASE = 'https://ml-demand-forecasting-platform-production.up.railway.app'
 const STORES = ['Store_1', 'Store_2', 'Store_3', 'Store_4', 'Store_5']
 const PRODUCTS = ['Product_A', 'Product_B', 'Product_C', 'Product_D', 'Product_E', 'Product_F', 'Product_G', 'Product_H']
 
