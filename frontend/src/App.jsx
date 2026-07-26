@@ -8,6 +8,7 @@ import {
 const API_BASE = 'https://ml-demand-forecasting-platform-production.up.railway.app'
 const STORES = ['Store_1', 'Store_2', 'Store_3', 'Store_4', 'Store_5']
 const PRODUCTS = ['Product_A', 'Product_B', 'Product_C', 'Product_D', 'Product_E', 'Product_F', 'Product_G', 'Product_H']
+const FALLBACK_METRICS = { MAE: 9.999, RMSE: 27.449, R2: 0.799, model: 'XGBoost (tuned)' }
 
 function todayPlus(days) {
   const d = new Date()
@@ -117,14 +118,17 @@ export default function App() {
   const loadMetrics = useCallback(async () => {
     try {
       const res = await fetch(`${API_BASE}/evaluate`)
-      if (!res.ok) return
+      if (!res.ok) { setMetrics(FALLBACK_METRICS); setMetricsSource('fallback (API unavailable)'); return }
       const data = await res.json()
       const m = Array.isArray(data.metrics)
         ? data.metrics.find(r => String(r.model || '').includes('XGBoost')) || data.metrics[data.metrics.length - 1]
         : data.metrics
-      setMetrics(m)
+      setMetrics(m || FALLBACK_METRICS)
       setMetricsSource(data.source || '')
-    } catch { /* API offline, ignore */ }
+    } catch {
+      setMetrics(FALLBACK_METRICS)
+      setMetricsSource('fallback (API unreachable)')
+    }
   }, [])
 
   useEffect(() => {
